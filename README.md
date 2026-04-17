@@ -1,35 +1,35 @@
 # 🚜 AgroControl API
 
-![Go](https://img.shields.io/badge/Go-1.22-blue?logo=go)
-![Gin](https://img.shields.io/badge/Gin-Framework-green)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql)
-![JWT](https://img.shields.io/badge/Auth-JWT-orange)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+<p align="center">
+  <img src="https://img.shields.io/badge/Go-1.22-blue?logo=go" />
+  <img src="https://img.shields.io/badge/Gin-Framework-green" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql" />
+  <img src="https://img.shields.io/badge/Auth-JWT-orange" />
+  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow" />
+</p>
 
 ---
 
 ## 📌 Sobre o projeto
 
-O **AgroControl API** é uma API REST desenvolvida em **Go (Golang)** com foco em **gestão agrícola**, aplicando boas práticas de desenvolvimento backend e arquitetura em camadas.
+O **AgroControl API** é uma API REST desenvolvida em **Go (Golang)** com foco em **gestão agrícola**, aplicando boas práticas de backend e arquitetura em camadas.
 
-O projeto simula um sistema real de gerenciamento rural, permitindo controle de usuários, autenticação segura e estrutura pronta para expansão com módulos agrícolas.
+O sistema simula um cenário real do agronegócio, permitindo o gerenciamento de usuários, fazendas e talhões, com autenticação segura e estrutura pronta para expansão.
 
 ---
 
 ## 🎯 Objetivo
 
-Criar uma API robusta, escalável e organizada, com foco em:
+Construir uma API:
 
-* autenticação segura (JWT)
-* organização por camadas (clean architecture simplificada)
-* regras de negócio reais do agro
-* código pronto para produção e evolução
+- 🔐 Segura (JWT)
+- 🧱 Organizada (arquitetura em camadas)
+- ⚡ Escalável
+- 🌾 Baseada em regras reais do agronegócio
 
 ---
 
 ## 🧠 Arquitetura
-
-O projeto segue uma arquitetura baseada em separação de responsabilidades:
 
 ```
 Handler → Service → Repository → Database
@@ -39,128 +39,99 @@ Handler → Service → Repository → Database
 
 ```
 internal/
-├── handler      # camada HTTP (entrada)
+├── handler      # camada HTTP
 ├── service      # regras de negócio
 ├── repository   # acesso ao banco
-├── domain       # entidades do sistema
-├── dto          # contratos de entrada/saída
-├── middleware   # autenticação
-└── utils        # helpers (JWT, bcrypt)
+├── domain       # entidades
+├── dto          # contratos da API
+├── middleware   # autenticação JWT
+└── utils        # helpers
 ```
 
 ---
 
 ## ⚙️ Tecnologias
 
-* **Go (Golang)**
-* **Gin** (HTTP framework)
-* **GORM** (ORM)
-* **PostgreSQL**
-* **JWT (auth)**
-* **bcrypt (hash de senha)**
+- **Go (Golang)**
+- **Gin**
+- **GORM**
+- **PostgreSQL**
+- **JWT**
+- **bcrypt**
 
 ---
 
-## 🔐 Funcionalidades implementadas
+## 🔐 Funcionalidades
 
 ### 👤 Usuários
-
-* Cadastro de usuários
-* Validação de dados
-* Controle de roles:
-
-  * `admin`
-  * `manager`
-  * `operator`
-
----
+- Cadastro
+- Login
+- Controle de roles (admin, manager, operator)
 
 ### 🔑 Autenticação
-
-* Login com email e senha
-* Geração de token JWT
-* Token com expiração
+- JWT
+- Middleware de proteção de rotas
 
 ---
 
-### 🛡️ Segurança
+## 🚜 Módulo Farm (Fazendas)
 
-* Middleware de autenticação
-* Rotas protegidas
+CRUD completo:
+
+```
+POST   /farms
+GET    /farms
+GET    /farms/:id
+PUT    /farms/:id
+DELETE /farms/:id
+```
+
+✔ Validação de regra (`total_area > 0`)
 
 ---
 
-### 🚜 Módulo Farm (Fazendas)
+## 🌱 Módulo Field (Talhões)
 
-CRUD completo de fazendas com autenticação JWT:
+CRUD completo:
 
-* `POST /farms` → Criar fazenda
-* `GET /farms` → Listar fazendas
-* `GET /farms/:id` → Buscar por ID
-* `PUT /farms/:id` → Atualizar
-* `DELETE /farms/:id` → Remover
+```
+POST   /fields
+GET    /fields
+GET    /fields/:id
+PUT    /fields/:id
+DELETE /fields/:id
+```
+
+✔ Validação de área  
+✔ Validação de relacionamento com Farm  
 
 ---
 
-## 🚀 Endpoints principais
-
-### Health Check
+## 🔗 Relacionamento
 
 ```
-GET /health
-```
-
----
-
-### Criar usuário
-
-```
-POST /users
-```
-
-```json
-{
-  "name": "Willian",
-  "email": "willian@email.com",
-  "password": "123456",
-  "role": "admin"
-}
+Farm (1) → (N) Field
 ```
 
 ---
 
-### Login
+## 🚀 Endpoint avançado
+
+### 📌 Listar talhões por fazenda
 
 ```
-POST /login
+GET /farms/:id/fields
 ```
 
-```json
-{
-  "email": "willian@email.com",
-  "password": "123456"
-}
-```
+✔ Filtra por farm_id  
+✔ Valida existência da fazenda  
+✔ Retorna apenas dados relacionados  
 
 ---
 
-### Rota protegida
+## ▶️ Como rodar
 
-```
-GET /auth/me
-```
-
-Header:
-
-```
-Authorization: Bearer TOKEN
-```
-
----
-
-## ▶️ Como rodar o projeto
-
-### 1. Clonar
+### 1. Clone o projeto
 
 ```bash
 git clone https://github.com/Willian-dallagnol/agrocontrol-api.git
@@ -169,9 +140,9 @@ cd agrocontrol-api
 
 ---
 
-### 2. Configurar ambiente
+### 2. Configure o ambiente
 
-Crie um arquivo `.env`:
+Crie um `.env`:
 
 ```env
 APP_PORT=8080
@@ -185,7 +156,7 @@ JWT_SECRET=supersecret
 
 ---
 
-### 3. Banco de dados
+### 3. Crie o banco
 
 ```sql
 CREATE DATABASE agro_control;
@@ -193,7 +164,7 @@ CREATE DATABASE agro_control;
 
 ---
 
-### 4. Rodar aplicação
+### 4. Execute
 
 ```bash
 go run cmd/api/main.go
@@ -201,9 +172,7 @@ go run cmd/api/main.go
 
 ---
 
-### 5. Testar
-
-Acesse:
+### 5. Teste
 
 ```
 http://localhost:8080/health
@@ -211,28 +180,28 @@ http://localhost:8080/health
 
 ---
 
-## 📈 Roadmap (próximas features)
+## 📈 Roadmap
 
-* [x] Módulo de Fazendas (Farm)
-* [ ] Talhões (Field)
-* [ ] Culturas (Crop)
-* [ ] Safras (Season)
-* [ ] Plantios
-* [ ] Insumos
-* [ ] Aplicações agrícolas
-* [ ] Alertas inteligentes
-* [ ] Dashboard
+- [x] Farm
+- [x] Field
+- [ ] Crop
+- [ ] Season
+- [ ] Planting
+- [ ] Insumos
+- [ ] Aplicações agrícolas
+- [ ] Alertas
+- [ ] Dashboard
 
 ---
 
-## 💡 Diferenciais do projeto
+## 💡 Diferenciais
 
-* Estrutura organizada (nível mercado)
-* Separação de responsabilidades clara
-* Autenticação real com JWT
-* Banco relacional com ORM
-* CRUD completo implementado
-* Base pronta para escalar
+- 🧠 Arquitetura limpa e organizada
+- 🔐 Autenticação com JWT
+- ⚙️ Regras de negócio bem definidas
+- 🔗 Relacionamento entre entidades
+- 🚀 Endpoint com filtro (nível mercado)
+- 📦 Estrutura pronta para escalar
 
 ---
 
@@ -240,11 +209,11 @@ http://localhost:8080/health
 
 **Willian Dall Agnol**
 
-* GitHub: https://github.com/Willian-dallagnol
-* LinkedIn: https://www.linkedin.com/in/willian-dall-agnol-52161315a/
+- GitHub: https://github.com/Willian-dallagnol  
+- LinkedIn: https://www.linkedin.com/in/willian-dall-agnol-52161315a/  
 
 ---
 
 ## 📌 Status
 
-🚧 Em desenvolvimento contínuo — evoluindo para uma plataforma completa de gestão agrícola.
+🚧 Em evolução contínua — rumo a uma plataforma completa de gestão agrícola
