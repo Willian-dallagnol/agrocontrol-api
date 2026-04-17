@@ -14,7 +14,7 @@ func main() {
 
 	db := configs.ConnectDatabase(cfg)
 
-	err := db.AutoMigrate(&entities.User{})
+	err := db.AutoMigrate(&entities.User{}, &entities.Farm{})
 	if err != nil {
 		log.Fatal("Erro ao executar migration:", err)
 	}

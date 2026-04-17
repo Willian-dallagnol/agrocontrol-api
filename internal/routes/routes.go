@@ -39,4 +39,18 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 			})
 		})
 	}
+
+	farmRepo := repository.NewFarmRepository(db)
+	farmService := service.NewFarmService(farmRepo)
+	farmHandler := handler.NewFarmHandler(farmService)
+
+	farms := router.Group("/farms")
+	farms.Use(middleware.AuthMiddleware(jwtSecret))
+	{
+		farms.POST("", farmHandler.CreateFarm)
+		farms.GET("", farmHandler.GetFarms)
+		farms.GET("/:id", farmHandler.GetFarmByID)
+		farms.PUT("/:id", farmHandler.UpdateFarm)
+		farms.DELETE("/:id", farmHandler.DeleteFarm)
+	}
 }
