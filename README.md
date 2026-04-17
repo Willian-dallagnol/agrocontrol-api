@@ -14,7 +14,14 @@
 
 O **AgroControl API** é uma API REST desenvolvida em **Go (Golang)** com foco em **gestão agrícola**, aplicando boas práticas de backend e arquitetura em camadas.
 
-O sistema simula um cenário real do agronegócio, permitindo o gerenciamento de usuários, fazendas e talhões, com autenticação segura e estrutura pronta para expansão.
+O sistema simula um cenário real do agronegócio, permitindo o gerenciamento de:
+
+- Usuários
+- Fazendas (Farm)
+- Talhões (Field)
+- Culturas (Crop)
+
+Tudo com autenticação segura via JWT e estrutura pronta para evolução.
 
 ---
 
@@ -39,13 +46,13 @@ Handler → Service → Repository → Database
 
 ```
 internal/
-├── handler      # camada HTTP
-├── service      # regras de negócio
-├── repository   # acesso ao banco
-├── domain       # entidades
-├── dto          # contratos da API
-├── middleware   # autenticação JWT
-└── utils        # helpers
+├── handler
+├── service
+├── repository
+├── domain
+├── dto
+├── middleware
+└── utils
 ```
 
 ---
@@ -68,6 +75,8 @@ internal/
 - Login
 - Controle de roles (admin, manager, operator)
 
+---
+
 ### 🔑 Autenticação
 - JWT
 - Middleware de proteção de rotas
@@ -75,8 +84,6 @@ internal/
 ---
 
 ## 🚜 Módulo Farm (Fazendas)
-
-CRUD completo:
 
 ```
 POST   /farms
@@ -92,8 +99,6 @@ DELETE /farms/:id
 
 ## 🌱 Módulo Field (Talhões)
 
-CRUD completo:
-
 ```
 POST   /fields
 GET    /fields
@@ -107,15 +112,35 @@ DELETE /fields/:id
 
 ---
 
-## 🔗 Relacionamento
+## 🌾 Módulo Crop (Culturas)
 
 ```
-Farm (1) → (N) Field
+POST   /crops
+GET    /crops
+GET    /crops/:id
+PUT    /crops/:id
+DELETE /crops/:id
 ```
+
+✔ Validação de relacionamento com Field  
+✔ Regra de negócio aplicada  
 
 ---
 
-## 🚀 Endpoint avançado
+## 🔗 Relacionamento entre entidades
+
+```
+Farm (1) → (N) Field → (N) Crop
+```
+
+Cada:
+
+- Fazenda possui vários talhões  
+- Talhão possui várias culturas  
+
+---
+
+## 🚀 Endpoints avançados
 
 ### 📌 Listar talhões por fazenda
 
@@ -123,15 +148,14 @@ Farm (1) → (N) Field
 GET /farms/:id/fields
 ```
 
-✔ Filtra por farm_id  
+✔ Filtra dados por relacionamento  
 ✔ Valida existência da fazenda  
-✔ Retorna apenas dados relacionados  
 
 ---
 
-## ▶️ Como rodar
+## ▶️ Como rodar o projeto
 
-### 1. Clone o projeto
+### 1. Clonar
 
 ```bash
 git clone https://github.com/Willian-dallagnol/agrocontrol-api.git
@@ -140,7 +164,7 @@ cd agrocontrol-api
 
 ---
 
-### 2. Configure o ambiente
+### 2. Configurar ambiente
 
 Crie um `.env`:
 
@@ -156,7 +180,7 @@ JWT_SECRET=supersecret
 
 ---
 
-### 3. Crie o banco
+### 3. Criar banco
 
 ```sql
 CREATE DATABASE agro_control;
@@ -164,7 +188,7 @@ CREATE DATABASE agro_control;
 
 ---
 
-### 4. Execute
+### 4. Rodar aplicação
 
 ```bash
 go run cmd/api/main.go
@@ -172,10 +196,25 @@ go run cmd/api/main.go
 
 ---
 
-### 5. Teste
+### 5. Testar
 
 ```
 http://localhost:8080/health
+```
+
+---
+
+## 📸 Exemplo de resposta
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Soja",
+    "type": "Grão",
+    "field_id": 1
+  }
+]
 ```
 
 ---
@@ -184,7 +223,7 @@ http://localhost:8080/health
 
 - [x] Farm
 - [x] Field
-- [ ] Crop
+- [x] Crop
 - [ ] Season
 - [ ] Planting
 - [ ] Insumos
@@ -196,9 +235,9 @@ http://localhost:8080/health
 
 ## 💡 Diferenciais
 
-- 🧠 Arquitetura limpa e organizada
+- 🧠 Arquitetura limpa
 - 🔐 Autenticação com JWT
-- ⚙️ Regras de negócio bem definidas
+- ⚙️ Regras de negócio aplicadas
 - 🔗 Relacionamento entre entidades
 - 🚀 Endpoint com filtro (nível mercado)
 - 📦 Estrutura pronta para escalar

@@ -18,6 +18,7 @@ func main() {
 		&entities.User{},
 		&entities.Farm{},
 		&entities.Field{},
+		&entities.Crop{},
 	)
 	if err != nil {
 		log.Fatal("Erro ao executar migration:", err)

@@ -54,6 +54,12 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 	fieldService := service.NewFieldService(fieldRepo, farmRepo)
 	fieldHandler := handler.NewFieldHandler(fieldService)
 
+	// ===================== CROP =====================
+
+	cropRepo := repository.NewCropRepository(db)
+	cropService := service.NewCropService(cropRepo, fieldRepo)
+	cropHandler := handler.NewCropHandler(cropService)
+
 	// ===================== FARM ROUTES =====================
 
 	farms := router.Group("/farms")
@@ -64,8 +70,6 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 		farms.GET("/:id", farmHandler.GetFarmByID)
 		farms.PUT("/:id", farmHandler.UpdateFarm)
 		farms.DELETE("/:id", farmHandler.DeleteFarm)
-
-		// 🔥 NOVO ENDPOINT (RELACIONAMENTO)
 		farms.GET("/:id/fields", fieldHandler.GetFieldsByFarm)
 	}
 
@@ -79,5 +83,17 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 		fields.GET("/:id", fieldHandler.GetFieldByID)
 		fields.PUT("/:id", fieldHandler.UpdateField)
 		fields.DELETE("/:id", fieldHandler.DeleteField)
+	}
+
+	// ===================== CROP ROUTES =====================
+
+	crops := router.Group("/crops")
+	crops.Use(middleware.AuthMiddleware(jwtSecret))
+	{
+		crops.POST("", cropHandler.CreateCrop)
+		crops.GET("", cropHandler.GetCrops)
+		crops.GET("/:id", cropHandler.GetCropByID)
+		crops.PUT("/:id", cropHandler.UpdateCrop)
+		crops.DELETE("/:id", cropHandler.DeleteCrop)
 	}
 }
