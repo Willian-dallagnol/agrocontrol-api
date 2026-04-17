@@ -1,58 +1,63 @@
 # 🚜 AgroControl API
 
-API de Gestão Agrícola desenvolvida em **Go**, com autenticação via **JWT**, banco de dados **PostgreSQL** e arquitetura em camadas (Handler, Service, Repository).
+![Go](https://img.shields.io/badge/Go-1.22-blue?logo=go)
+![Gin](https://img.shields.io/badge/Gin-Framework-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 
 ---
 
 ## 📌 Sobre o projeto
 
-O **AgroControl API** é um backend voltado para o gerenciamento de operações agrícolas, permitindo controle de usuários, autenticação segura e estrutura escalável para expansão futura (fazendas, talhões, plantios, insumos e mais).
+O **AgroControl API** é uma API REST desenvolvida em **Go (Golang)** com foco em **gestão agrícola**, aplicando boas práticas de desenvolvimento backend e arquitetura em camadas.
 
-Este projeto foi desenvolvido com foco em:
+O projeto simula um sistema real de gerenciamento rural, permitindo controle de usuários, autenticação segura e estrutura pronta para expansão com módulos agrícolas.
 
-* boas práticas de backend
-* organização de código
-* regras de negócio reais
-* uso de tecnologias utilizadas no mercado
+---
+
+## 🎯 Objetivo
+
+Criar uma API robusta, escalável e organizada, com foco em:
+
+* autenticação segura (JWT)
+* organização por camadas (clean architecture simplificada)
+* regras de negócio reais do agro
+* código pronto para produção e evolução
 
 ---
 
 ## 🧠 Arquitetura
 
-O projeto segue o padrão de separação por camadas:
+O projeto segue uma arquitetura baseada em separação de responsabilidades:
 
-```
+```id="arch1"
 Handler → Service → Repository → Database
 ```
 
-### 📂 Estrutura de pastas
+### 📂 Estrutura
 
-```
-agrocontrol-api
-├── cmd/api                # ponto de entrada da aplicação
-├── configs               # configuração (env, banco)
-├── internal
-│   ├── domain/entities   # entidades do sistema
-│   ├── dto               # entrada/saída de dados
-│   ├── repository        # acesso ao banco
-│   ├── service           # regras de negócio
-│   ├── handler           # camada HTTP
-│   ├── middleware        # autenticação
-│   └── utils             # helpers (JWT, bcrypt)
-├── .env
-├── go.mod
+```id="arch2"
+internal/
+├── handler      # camada HTTP (entrada)
+├── service      # regras de negócio
+├── repository   # acesso ao banco
+├── domain       # entidades do sistema
+├── dto          # contratos de entrada/saída
+├── middleware   # autenticação
+└── utils        # helpers (JWT, bcrypt)
 ```
 
 ---
 
-## ⚙️ Tecnologias utilizadas
+## ⚙️ Tecnologias
 
 * **Go (Golang)**
-* **Gin** (framework HTTP)
+* **Gin** (HTTP framework)
 * **GORM** (ORM)
 * **PostgreSQL**
-* **JWT (JSON Web Token)**
-* **bcrypt** (hash de senha)
+* **JWT (auth)**
+* **bcrypt (hash de senha)**
 
 ---
 
@@ -60,15 +65,19 @@ agrocontrol-api
 
 ### 👤 Usuários
 
-* Cadastro de usuário
+* Cadastro de usuários
 * Validação de dados
-* Senha criptografada com bcrypt
+* Controle de roles:
+
+  * `admin`
+  * `manager`
+  * `operator`
 
 ### 🔑 Autenticação
 
 * Login com email e senha
 * Geração de token JWT
-* Expiração de token
+* Token com expiração
 
 ### 🛡️ Segurança
 
@@ -77,23 +86,21 @@ agrocontrol-api
 
 ---
 
-## 🚀 Endpoints disponíveis
+## 🚀 Endpoints
 
-### 🔹 Health Check
+### Health Check
 
-```
+```http
 GET /health
 ```
 
 ---
 
-### 🔹 Criar usuário
+### Criar usuário
 
-```
+```http
 POST /users
 ```
-
-**Body:**
 
 ```json
 {
@@ -106,13 +113,11 @@ POST /users
 
 ---
 
-### 🔹 Login
+### Login
 
-```
+```http
 POST /login
 ```
-
-**Body:**
 
 ```json
 {
@@ -123,15 +128,15 @@ POST /login
 
 ---
 
-### 🔹 Rota protegida
+### Rota protegida
 
-```
+```http
 GET /auth/me
 ```
 
-**Header:**
+Header:
 
-```
+```http
 Authorization: Bearer TOKEN
 ```
 
@@ -139,7 +144,7 @@ Authorization: Bearer TOKEN
 
 ## ▶️ Como rodar o projeto
 
-### 1. Clonar o repositório
+### 1. Clonar
 
 ```bash
 git clone https://github.com/Willian-dallagnol/agrocontrol-api.git
@@ -148,9 +153,9 @@ cd agrocontrol-api
 
 ---
 
-### 2. Configurar variáveis de ambiente
+### 2. Configurar ambiente
 
-Crie um arquivo `.env`:
+Crie um `.env`:
 
 ```env
 APP_PORT=8080
@@ -164,7 +169,7 @@ JWT_SECRET=supersecret
 
 ---
 
-### 3. Criar banco de dados
+### 3. Banco de dados
 
 ```sql
 CREATE DATABASE agro_control;
@@ -172,7 +177,7 @@ CREATE DATABASE agro_control;
 
 ---
 
-### 4. Rodar a aplicação
+### 4. Rodar
 
 ```bash
 go run cmd/api/main.go
@@ -182,24 +187,33 @@ go run cmd/api/main.go
 
 ### 5. Testar
 
-Abra no navegador:
-
-```
+```bash
 http://localhost:8080/health
 ```
 
 ---
 
-## 📈 Próximas funcionalidades
+## 📈 Roadmap (próximas features)
 
-* Cadastro de **Fazendas (Farm)**
-* Gestão de **Talhões (Field)**
-* Controle de **Culturas (Crop)**
-* Gestão de **Safras (Season)**
-* Registro de **Plantios**
-* Controle de **Insumos**
-* Registro de **Aplicações**
-* Sistema de **Alertas agrícolas**
+* [ ] Módulo de Fazendas (Farm)
+* [ ] Talhões (Field)
+* [ ] Culturas (Crop)
+* [ ] Safras (Season)
+* [ ] Plantios
+* [ ] Insumos
+* [ ] Aplicações agrícolas
+* [ ] Alertas inteligentes
+* [ ] Dashboard
+
+---
+
+## 💡 Diferenciais do projeto
+
+* Estrutura organizada (nível mercado)
+* Separação de responsabilidades clara
+* Autenticação real com JWT
+* Banco relacional com ORM
+* Base pronta para escalar
 
 ---
 
@@ -212,8 +226,8 @@ http://localhost:8080/health
 
 ---
 
-## 📌 Status do projeto
+## 📌 Status
 
-🚧 Em desenvolvimento — novas funcionalidades sendo adicionadas continuamente.
+🚧 Em desenvolvimento contínuo — evoluindo para uma plataforma completa de gestão agrícola.
 
 ---
