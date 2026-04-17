@@ -18,6 +18,8 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 		})
 	})
 
+	// ===================== USER & AUTH =====================
+
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
@@ -40,9 +42,19 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 		})
 	}
 
+	// ===================== FARM =====================
+
 	farmRepo := repository.NewFarmRepository(db)
 	farmService := service.NewFarmService(farmRepo)
 	farmHandler := handler.NewFarmHandler(farmService)
+
+	// ===================== FIELD =====================
+
+	fieldRepo := repository.NewFieldRepository(db)
+	fieldService := service.NewFieldService(fieldRepo, farmRepo)
+	fieldHandler := handler.NewFieldHandler(fieldService)
+
+	// ===================== FARM ROUTES =====================
 
 	farms := router.Group("/farms")
 	farms.Use(middleware.AuthMiddleware(jwtSecret))
@@ -52,5 +64,20 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, jwtSecret string) {
 		farms.GET("/:id", farmHandler.GetFarmByID)
 		farms.PUT("/:id", farmHandler.UpdateFarm)
 		farms.DELETE("/:id", farmHandler.DeleteFarm)
+
+		// 🔥 NOVO ENDPOINT (RELACIONAMENTO)
+		farms.GET("/:id/fields", fieldHandler.GetFieldsByFarm)
+	}
+
+	// ===================== FIELD ROUTES =====================
+
+	fields := router.Group("/fields")
+	fields.Use(middleware.AuthMiddleware(jwtSecret))
+	{
+		fields.POST("", fieldHandler.CreateField)
+		fields.GET("", fieldHandler.GetFields)
+		fields.GET("/:id", fieldHandler.GetFieldByID)
+		fields.PUT("/:id", fieldHandler.UpdateField)
+		fields.DELETE("/:id", fieldHandler.DeleteField)
 	}
 }

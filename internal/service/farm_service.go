@@ -4,6 +4,7 @@ import (
 	"agrocontrol-api/internal/domain/entities"
 	"agrocontrol-api/internal/dto"
 	"agrocontrol-api/internal/repository"
+	"errors"
 )
 
 type FarmService struct {
@@ -15,6 +16,10 @@ func NewFarmService(repo *repository.FarmRepository) *FarmService {
 }
 
 func (s *FarmService) CreateFarm(req dto.CreateFarmRequest, userID uint) (*dto.FarmResponse, error) {
+	if req.TotalArea <= 0 {
+		return nil, errors.New("a área total da fazenda deve ser maior que zero")
+	}
+
 	farm := &entities.Farm{
 		Name:      req.Name,
 		OwnerName: req.OwnerName,
@@ -82,6 +87,10 @@ func (s *FarmService) GetFarmByID(id uint) (*dto.FarmResponse, error) {
 }
 
 func (s *FarmService) UpdateFarm(id uint, req dto.UpdateFarmRequest) (*dto.FarmResponse, error) {
+	if req.TotalArea <= 0 {
+		return nil, errors.New("a área total da fazenda deve ser maior que zero")
+	}
+
 	farm, err := s.Repo.FindByID(id)
 	if err != nil {
 		return nil, err
