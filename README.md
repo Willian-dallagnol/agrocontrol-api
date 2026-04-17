@@ -31,13 +31,13 @@ Criar uma API robusta, escalável e organizada, com foco em:
 
 O projeto segue uma arquitetura baseada em separação de responsabilidades:
 
-```id="arch1"
+```
 Handler → Service → Repository → Database
 ```
 
 ### 📂 Estrutura
 
-```id="arch2"
+```
 internal/
 ├── handler      # camada HTTP (entrada)
 ├── service      # regras de negócio
@@ -73,11 +73,15 @@ internal/
   * `manager`
   * `operator`
 
+---
+
 ### 🔑 Autenticação
 
 * Login com email e senha
 * Geração de token JWT
 * Token com expiração
+
+---
 
 ### 🛡️ Segurança
 
@@ -86,11 +90,23 @@ internal/
 
 ---
 
-## 🚀 Endpoints
+### 🚜 Módulo Farm (Fazendas)
+
+CRUD completo de fazendas com autenticação JWT:
+
+* `POST /farms` → Criar fazenda
+* `GET /farms` → Listar fazendas
+* `GET /farms/:id` → Buscar por ID
+* `PUT /farms/:id` → Atualizar
+* `DELETE /farms/:id` → Remover
+
+---
+
+## 🚀 Endpoints principais
 
 ### Health Check
 
-```http
+```
 GET /health
 ```
 
@@ -98,7 +114,7 @@ GET /health
 
 ### Criar usuário
 
-```http
+```
 POST /users
 ```
 
@@ -115,7 +131,7 @@ POST /users
 
 ### Login
 
-```http
+```
 POST /login
 ```
 
@@ -130,13 +146,13 @@ POST /login
 
 ### Rota protegida
 
-```http
+```
 GET /auth/me
 ```
 
 Header:
 
-```http
+```
 Authorization: Bearer TOKEN
 ```
 
@@ -155,7 +171,7 @@ cd agrocontrol-api
 
 ### 2. Configurar ambiente
 
-Crie um `.env`:
+Crie um arquivo `.env`:
 
 ```env
 APP_PORT=8080
@@ -177,7 +193,7 @@ CREATE DATABASE agro_control;
 
 ---
 
-### 4. Rodar
+### 4. Rodar aplicação
 
 ```bash
 go run cmd/api/main.go
@@ -187,7 +203,9 @@ go run cmd/api/main.go
 
 ### 5. Testar
 
-```bash
+Acesse:
+
+```
 http://localhost:8080/health
 ```
 
@@ -195,7 +213,7 @@ http://localhost:8080/health
 
 ## 📈 Roadmap (próximas features)
 
-* [ ] Módulo de Fazendas (Farm)
+* [x] Módulo de Fazendas (Farm)
 * [ ] Talhões (Field)
 * [ ] Culturas (Crop)
 * [ ] Safras (Season)
@@ -213,6 +231,7 @@ http://localhost:8080/health
 * Separação de responsabilidades clara
 * Autenticação real com JWT
 * Banco relacional com ORM
+* CRUD completo implementado
 * Base pronta para escalar
 
 ---
@@ -229,5 +248,3 @@ http://localhost:8080/health
 ## 📌 Status
 
 🚧 Em desenvolvimento contínuo — evoluindo para uma plataforma completa de gestão agrícola.
-
----
