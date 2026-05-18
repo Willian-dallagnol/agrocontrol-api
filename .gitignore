@@ -1,0 +1,40 @@
+# Binários
+agrocontrol
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de teste
+*.test
+*.out
+
+# Banco de dados local
+*.db
+*.db-shm
+*.db-wal
+
+# Variáveis de ambiente — NUNCA comitar o .env com senhas reais
+.env
+
+# Dependências Go (usar go mod — não vendor)
+vendor/
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cobertura de testes
+coverage.out
+coverage.html
+
+# Logs
+*.log

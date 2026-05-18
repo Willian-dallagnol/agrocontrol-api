@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS seasons;
+DROP TABLE IF EXISTS crops;

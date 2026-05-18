@@ -1,0 +1,2548 @@
+basePath: /
+definitions:
+  dto.AdjustStockRequest:
+    properties:
+      quantity:
+        type: number
+      reason:
+        type: string
+    required:
+    - quantity
+    - reason
+    type: object
+  dto.AlertResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      priority:
+        $ref: '#/definitions/entities.AlertPriority'
+      ref_id:
+        type: integer
+      ref_type:
+        type: string
+      resolved_at:
+        type: string
+      status:
+        $ref: '#/definitions/entities.AlertStatus'
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/entities.AlertType'
+    type: object
+  dto.ApplicationResponse:
+    properties:
+      application_date:
+        type: string
+      application_type:
+        $ref: '#/definitions/entities.ApplicationType'
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      dose_per_ha:
+        type: number
+      equipment:
+        type: string
+      field_id:
+        type: integer
+      field_name:
+        type: string
+      humidity:
+        type: number
+      id:
+        type: integer
+      input_id:
+        type: integer
+      input_name:
+        type: string
+      notes:
+        type: string
+      operator:
+        type: string
+      planting_id:
+        type: integer
+      spray_volume:
+        type: number
+      target:
+        type: string
+      temperature:
+        type: number
+      total_used:
+        type: number
+      wind_speed:
+        type: number
+    type: object
+  dto.CreateAlertRequest:
+    properties:
+      description:
+        type: string
+      priority:
+        allOf:
+        - $ref: '#/definitions/entities.AlertPriority'
+        enum:
+        - low
+        - medium
+        - high
+      ref_id:
+        type: integer
+      ref_type:
+        type: string
+      title:
+        minLength: 3
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/entities.AlertType'
+        enum:
+        - low_stock
+        - expired_input
+        - pest
+        - weather
+        - pending_application
+        - harvest_soon
+    required:
+    - title
+    - type
+    type: object
+  dto.CreateApplicationRequest:
+    properties:
+      application_date:
+        type: string
+      application_type:
+        allOf:
+        - $ref: '#/definitions/entities.ApplicationType'
+        enum:
+        - fertilizer
+        - herbicide
+        - fungicide
+        - insecticide
+        - correctant
+        - biological
+      dose_per_ha:
+        type: number
+      equipment:
+        type: string
+      field_id:
+        type: integer
+      humidity:
+        maximum: 100
+        minimum: 0
+        type: number
+      input_id:
+        type: integer
+      notes:
+        type: string
+      operator:
+        type: string
+      planting_id:
+        type: integer
+      spray_volume:
+        type: number
+      target:
+        type: string
+      temperature:
+        type: number
+      wind_speed:
+        minimum: 0
+        type: number
+    required:
+    - application_date
+    - application_type
+    - dose_per_ha
+    - field_id
+    - input_id
+    - operator
+    type: object
+  dto.CreateCropRequest:
+    properties:
+      cycle_days:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      plant_population:
+        type: integer
+      spacing_cm:
+        type: number
+      type:
+        type: string
+      variety:
+        type: string
+    required:
+    - name
+    type: object
+  dto.CreateFarmRequest:
+    properties:
+      city:
+        type: string
+      location:
+        type: string
+      name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      owner_name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      state:
+        type: string
+      total_area:
+        type: number
+    required:
+    - city
+    - name
+    - owner_name
+    - state
+    - total_area
+    type: object
+  dto.CreateFieldRequest:
+    properties:
+      area:
+        type: number
+      farm_id:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      soil_type:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.FieldStatus'
+        enum:
+        - active
+        - inactive
+        - fallow
+    required:
+    - area
+    - farm_id
+    - name
+    type: object
+  dto.CreateHarvestRequest:
+    properties:
+      field_loss:
+        maximum: 100
+        minimum: 0
+        type: number
+      grain_moisture:
+        maximum: 100
+        minimum: 0
+        type: number
+      harvest_date:
+        type: string
+      impurity:
+        maximum: 100
+        minimum: 0
+        type: number
+      notes:
+        type: string
+      planting_id:
+        type: integer
+      productivity_bag_ha:
+        minimum: 0
+        type: number
+      productivity_kg_ha:
+        minimum: 0
+        type: number
+      total_bags:
+        minimum: 0
+        type: number
+    required:
+    - harvest_date
+    - planting_id
+    type: object
+  dto.CreateInputRequest:
+    properties:
+      batch_number:
+        type: string
+      category:
+        allOf:
+        - $ref: '#/definitions/entities.InputCategory'
+        enum:
+        - fertilizer
+        - herbicide
+        - fungicide
+        - insecticide
+        - correctant
+        - biological
+        - seed
+        - other
+      cost_per_unit:
+        minimum: 0
+        type: number
+      expiration_date:
+        type: string
+      manufacturer:
+        type: string
+      min_stock_qty:
+        minimum: 0
+        type: number
+      name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      stock_qty:
+        minimum: 0
+        type: number
+      unit:
+        type: string
+    required:
+    - category
+    - name
+    - unit
+    type: object
+  dto.CreateMonitoringRequest:
+    properties:
+      crop_stage:
+        type: string
+      field_id:
+        type: integer
+      infestation_level:
+        maximum: 100
+        minimum: 0
+        type: number
+      inspection_date:
+        type: string
+      inspector:
+        type: string
+      notes:
+        type: string
+      planting_id:
+        type: integer
+      problem_name:
+        minLength: 2
+        type: string
+      severity:
+        allOf:
+        - $ref: '#/definitions/entities.Severity'
+        enum:
+        - low
+        - moderate
+        - high
+        - critical
+      technical_rec:
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/entities.MonitoringType'
+        enum:
+        - insect
+        - disease
+        - weed
+        - nutritional
+      urgent:
+        type: boolean
+    required:
+    - field_id
+    - inspection_date
+    - inspector
+    - problem_name
+    - severity
+    - type
+    type: object
+  dto.CreatePlantingRequest:
+    properties:
+      crop_id:
+        type: integer
+      density_kg_ha:
+        type: number
+      depth_cm:
+        type: number
+      expected_harvest:
+        type: string
+      field_id:
+        type: integer
+      notes:
+        type: string
+      planting_date:
+        type: string
+      responsible:
+        type: string
+      season_id:
+        type: integer
+      seeds_used_kg:
+        type: number
+      spacing:
+        type: number
+    required:
+    - crop_id
+    - field_id
+    - planting_date
+    - season_id
+    type: object
+  dto.CreateSeasonRequest:
+    properties:
+      end_date:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      start_date:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.SeasonStatus'
+        enum:
+        - planning
+        - active
+        - finished
+    required:
+    - end_date
+    - name
+    - start_date
+    type: object
+  dto.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        enum:
+        - admin
+        - manager
+        - operator
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - role
+    type: object
+  dto.CropResponse:
+    properties:
+      created_at:
+        type: string
+      cycle_days:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      plant_population:
+        type: integer
+      spacing_cm:
+        type: number
+      type:
+        type: string
+      updated_at:
+        type: string
+      variety:
+        type: string
+    type: object
+  dto.DashboardResponse:
+    properties:
+      active_plantings:
+        type: integer
+      applications_this_month:
+        type: integer
+      last_alerts:
+        items:
+          $ref: '#/definitions/dto.AlertResponse'
+        type: array
+      low_stock_inputs:
+        type: integer
+      open_alerts:
+        type: integer
+      total_farms:
+        type: integer
+      total_fields:
+        type: integer
+    type: object
+  dto.FarmResponse:
+    properties:
+      city:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      owner_name:
+        type: string
+      state:
+        type: string
+      total_area:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  dto.FieldResponse:
+    properties:
+      area:
+        type: number
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      farm_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      soil_type:
+        type: string
+      status:
+        $ref: '#/definitions/entities.FieldStatus'
+      updated_at:
+        type: string
+    type: object
+  dto.HarvestResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      field_id:
+        type: integer
+      field_loss:
+        type: number
+      field_name:
+        type: string
+      grain_moisture:
+        type: number
+      harvest_date:
+        type: string
+      id:
+        type: integer
+      impurity:
+        type: number
+      notes:
+        type: string
+      planting_id:
+        type: integer
+      productivity_bag_ha:
+        type: number
+      productivity_kg_ha:
+        type: number
+      total_bags:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  dto.InputResponse:
+    properties:
+      active:
+        type: boolean
+      batch_number:
+        type: string
+      category:
+        $ref: '#/definitions/entities.InputCategory'
+      cost_per_unit:
+        type: number
+      created_at:
+        type: string
+      expiration_date:
+        type: string
+      id:
+        type: integer
+      low_stock:
+        type: boolean
+      manufacturer:
+        type: string
+      min_stock_qty:
+        type: number
+      name:
+        type: string
+      stock_qty:
+        type: number
+      unit:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.MonitoringResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      crop_stage:
+        type: string
+      field_id:
+        type: integer
+      field_name:
+        type: string
+      id:
+        type: integer
+      infestation_level:
+        type: number
+      inspection_date:
+        type: string
+      inspector:
+        type: string
+      notes:
+        type: string
+      planting_id:
+        type: integer
+      problem_name:
+        type: string
+      severity:
+        $ref: '#/definitions/entities.Severity'
+      technical_rec:
+        type: string
+      type:
+        $ref: '#/definitions/entities.MonitoringType'
+      updated_at:
+        type: string
+      urgent:
+        type: boolean
+    type: object
+  dto.PaginatedResponse:
+    properties:
+      data: {}
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  dto.PlantingResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      crop_id:
+        type: integer
+      crop_name:
+        type: string
+      density_kg_ha:
+        type: number
+      depth_cm:
+        type: number
+      expected_harvest:
+        type: string
+      field_id:
+        type: integer
+      field_name:
+        type: string
+      id:
+        type: integer
+      notes:
+        type: string
+      planting_date:
+        type: string
+      responsible:
+        type: string
+      season_id:
+        type: integer
+      season_name:
+        type: string
+      seeds_used_kg:
+        type: number
+      spacing:
+        type: number
+      status:
+        $ref: '#/definitions/entities.PlantingStatus'
+      updated_at:
+        type: string
+    type: object
+  dto.SeasonResponse:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      end_date:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      start_date:
+        type: string
+      status:
+        $ref: '#/definitions/entities.SeasonStatus'
+      updated_at:
+        type: string
+    type: object
+  dto.UpdateAlertStatusRequest:
+    properties:
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.AlertStatus'
+        enum:
+        - open
+        - resolved
+        - ignored
+    required:
+    - status
+    type: object
+  dto.UpdateCropRequest:
+    properties:
+      cycle_days:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      plant_population:
+        type: integer
+      spacing_cm:
+        type: number
+      type:
+        type: string
+      variety:
+        type: string
+    required:
+    - name
+    type: object
+  dto.UpdateFarmRequest:
+    properties:
+      city:
+        type: string
+      location:
+        type: string
+      name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      owner_name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      state:
+        type: string
+      total_area:
+        type: number
+    required:
+    - city
+    - name
+    - owner_name
+    - state
+    - total_area
+    type: object
+  dto.UpdateFieldRequest:
+    properties:
+      area:
+        type: number
+      farm_id:
+        type: integer
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      soil_type:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.FieldStatus'
+        enum:
+        - active
+        - inactive
+        - fallow
+    required:
+    - area
+    - farm_id
+    - name
+    - status
+    type: object
+  dto.UpdateInputRequest:
+    properties:
+      active:
+        type: boolean
+      batch_number:
+        type: string
+      cost_per_unit:
+        minimum: 0
+        type: number
+      expiration_date:
+        type: string
+      manufacturer:
+        type: string
+      min_stock_qty:
+        minimum: 0
+        type: number
+      name:
+        maxLength: 150
+        minLength: 2
+        type: string
+      unit:
+        type: string
+    required:
+    - name
+    - unit
+    type: object
+  dto.UpdatePlantingRequest:
+    properties:
+      expected_harvest:
+        type: string
+      notes:
+        type: string
+      responsible:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.PlantingStatus'
+        enum:
+        - active
+        - harvested
+        - lost
+    type: object
+  dto.UpdateSeasonRequest:
+    properties:
+      end_date:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      start_date:
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/entities.SeasonStatus'
+        enum:
+        - planning
+        - active
+        - finished
+    required:
+    - end_date
+    - name
+    - start_date
+    - status
+    type: object
+  dto.UserResponse:
+    properties:
+      active:
+        type: boolean
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      role:
+        type: string
+    type: object
+  entities.AlertPriority:
+    enum:
+    - low
+    - medium
+    - high
+    type: string
+    x-enum-varnames:
+    - AlertPriorityLow
+    - AlertPriorityMedium
+    - AlertPriorityHigh
+  entities.AlertStatus:
+    enum:
+    - open
+    - resolved
+    - ignored
+    type: string
+    x-enum-varnames:
+    - AlertStatusOpen
+    - AlertStatusResolved
+    - AlertStatusIgnored
+  entities.AlertType:
+    enum:
+    - low_stock
+    - expired_input
+    - pest
+    - weather
+    - pending_application
+    - harvest_soon
+    type: string
+    x-enum-varnames:
+    - AlertTypeLowStock
+    - AlertTypeExpiredInput
+    - AlertTypePest
+    - AlertTypeWeather
+    - AlertTypePending
+    - AlertTypeHarvestSoon
+  entities.ApplicationType:
+    enum:
+    - fertilizer
+    - herbicide
+    - fungicide
+    - insecticide
+    - correctant
+    - biological
+    type: string
+    x-enum-varnames:
+    - AppTypeFertilizer
+    - AppTypeHerbicide
+    - AppTypeFungicide
+    - AppTypeInsecticide
+    - AppTypeCorrectant
+    - AppTypeBiological
+  entities.FieldStatus:
+    enum:
+    - active
+    - inactive
+    - fallow
+    type: string
+    x-enum-comments:
+      FieldStatusFallow: pousio
+    x-enum-descriptions:
+    - ""
+    - ""
+    - pousio
+    x-enum-varnames:
+    - FieldStatusActive
+    - FieldStatusInactive
+    - FieldStatusFallow
+  entities.InputCategory:
+    enum:
+    - fertilizer
+    - herbicide
+    - fungicide
+    - insecticide
+    - correctant
+    - biological
+    - seed
+    - other
+    type: string
+    x-enum-varnames:
+    - InputCategoryFertilizer
+    - InputCategoryHerbicide
+    - InputCategoryFungicide
+    - InputCategoryInsecticide
+    - InputCategoryCorrectant
+    - InputCategoryBiological
+    - InputCategorySeed
+    - InputCategoryOther
+  entities.MonitoringType:
+    enum:
+    - insect
+    - disease
+    - weed
+    - nutritional
+    type: string
+    x-enum-comments:
+      MonTypeDisease: doença
+      MonTypeInsect: praga inseto
+      MonTypeNutri: deficiência nutricional
+      MonTypeWeed: planta daninha
+    x-enum-descriptions:
+    - praga inseto
+    - doença
+    - planta daninha
+    - deficiência nutricional
+    x-enum-varnames:
+    - MonTypeInsect
+    - MonTypeDisease
+    - MonTypeWeed
+    - MonTypeNutri
+  entities.PlantingStatus:
+    enum:
+    - active
+    - harvested
+    - lost
+    type: string
+    x-enum-varnames:
+    - PlantingStatusActive
+    - PlantingStatusHarvested
+    - PlantingStatusLost
+  entities.SeasonStatus:
+    enum:
+    - planning
+    - active
+    - finished
+    type: string
+    x-enum-varnames:
+    - SeasonStatusPlanning
+    - SeasonStatusActive
+    - SeasonStatusFinished
+  entities.Severity:
+    enum:
+    - low
+    - moderate
+    - high
+    - critical
+    type: string
+    x-enum-varnames:
+    - SeverityLow
+    - SeverityModerate
+    - SeverityHigh
+    - SeverityCritical
+  utils.ErrorResponse:
+    properties:
+      code:
+        type: string
+      error:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API REST de gestão agrícola com autenticação JWT
+  title: AgroControl API
+  version: "1.0"
+paths:
+  /api/v1/alerts:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.AlertResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar todos os alertas
+      tags:
+      - alerts
+    post:
+      consumes:
+      - application/json
+      description: Cria um alerta manual. Alertas automáticos são criados pelo sistema
+        ao detectar estoque baixo ou monitoramento urgente.
+      parameters:
+      - description: Dados do alerta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateAlertRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AlertResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar alerta
+      tags:
+      - alerts
+  /api/v1/alerts/{id}:
+    get:
+      parameters:
+      - description: ID do alerta
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AlertResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar alerta por ID
+      tags:
+      - alerts
+  /api/v1/alerts/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Atualiza o status do alerta (open, resolved, ignored). Ao resolver,
+        registra o timestamp de resolução.
+      parameters:
+      - description: ID do alerta
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Novo status
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateAlertStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AlertResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar status do alerta
+      tags:
+      - alerts
+  /api/v1/alerts/open:
+    get:
+      description: Retorna apenas alertas com status 'open', ordenados por prioridade.
+        Limite de 20 alertas.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.AlertResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar alertas abertos
+      tags:
+      - alerts
+  /api/v1/applications:
+    get:
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Filtrar por talhão
+        in: query
+        name: field_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar aplicações
+      tags:
+      - applications
+    post:
+      consumes:
+      - application/json
+      description: Registra uma aplicação de insumo em um talhão. Debita o estoque
+        automaticamente e cria alerta se estoque ficar baixo.
+      parameters:
+      - description: Dados da aplicação
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ApplicationResponse'
+        "422":
+          description: Estoque insuficiente ou talhão inativo
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Registrar aplicação de insumo
+      tags:
+      - applications
+  /api/v1/applications/{id}:
+    get:
+      parameters:
+      - description: ID da aplicação
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ApplicationResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar aplicação por ID
+      tags:
+      - applications
+  /api/v1/crops:
+    get:
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Busca por nome
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar culturas
+      tags:
+      - crops
+    post:
+      consumes:
+      - application/json
+      description: Cadastra uma nova cultura agrícola (soja, milho, trigo, etc.)
+      parameters:
+      - description: Dados da cultura
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCropRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CropResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar cultura
+      tags:
+      - crops
+  /api/v1/crops/{id}:
+    delete:
+      parameters:
+      - description: ID da cultura
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir cultura
+      tags:
+      - crops
+    get:
+      parameters:
+      - description: ID da cultura
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CropResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar cultura por ID
+      tags:
+      - crops
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID da cultura
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCropRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CropResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar cultura
+      tags:
+      - crops
+  /api/v1/dashboard:
+    get:
+      description: 'Retorna métricas consolidadas: total de fazendas, talhões, plantios
+        ativos, alertas abertos, insumos com estoque baixo e aplicações do mês.'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DashboardResponse'
+      security:
+      - BearerAuth: []
+      summary: Dashboard consolidado
+      tags:
+      - dashboard
+  /api/v1/dashboard/overview:
+    get:
+      description: Retorna visão consolidada com métricas agregadas de fazendas, talhões,
+        plantios, insumos e alertas
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Dashboard overview detalhado
+      tags:
+      - dashboard
+  /api/v1/farms:
+    get:
+      description: Retorna fazendas paginadas. Admin vê todas, outros veem apenas
+        as suas.
+      parameters:
+      - description: Página (padrão 1)
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página (padrão 10)
+        in: query
+        name: limit
+        type: integer
+      - description: Busca por nome
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar fazendas
+      tags:
+      - farms
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova fazenda. Requer role manager ou admin.
+      parameters:
+      - description: Dados da fazenda
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateFarmRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.FarmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar fazenda
+      tags:
+      - farms
+  /api/v1/farms/{id}:
+    delete:
+      description: Exclui uma fazenda. Requer role admin.
+      parameters:
+      - description: ID da fazenda
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir fazenda
+      tags:
+      - farms
+    get:
+      description: Retorna os dados de uma fazenda específica
+      parameters:
+      - description: ID da fazenda
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FarmResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar fazenda por ID
+      tags:
+      - farms
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de uma fazenda. Requer role manager ou admin.
+      parameters:
+      - description: ID da fazenda
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateFarmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FarmResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar fazenda
+      tags:
+      - farms
+  /api/v1/farms/{id}/fields:
+    get:
+      parameters:
+      - description: ID da fazenda
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.FieldResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar talhões de uma fazenda
+      tags:
+      - fields
+  /api/v1/fields:
+    get:
+      description: Retorna talhões paginados. Admin vê todos, outros veem apenas os
+        seus.
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Busca por nome
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar talhões
+      tags:
+      - fields
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo talhão em uma fazenda. Valida se o usuário tem acesso
+        à fazenda.
+      parameters:
+      - description: Dados do talhão
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateFieldRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.FieldResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Fazenda não encontrada
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar talhão
+      tags:
+      - fields
+  /api/v1/fields/{id}:
+    delete:
+      parameters:
+      - description: ID do talhão
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir talhão
+      tags:
+      - fields
+    get:
+      parameters:
+      - description: ID do talhão
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FieldResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar talhão por ID
+      tags:
+      - fields
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID do talhão
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateFieldRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FieldResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar talhão
+      tags:
+      - fields
+  /api/v1/fields/{id}/applications:
+    get:
+      parameters:
+      - description: ID do talhão
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ApplicationResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar aplicações por talhão
+      tags:
+      - applications
+  /api/v1/fields/{id}/monitorings:
+    get:
+      parameters:
+      - description: ID do talhão
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.MonitoringResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar monitoramentos por talhão
+      tags:
+      - monitorings
+  /api/v1/harvests:
+    get:
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Filtrar por talhão
+        in: query
+        name: field_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar colheitas
+      tags:
+      - harvests
+    post:
+      consumes:
+      - application/json
+      description: Registra a colheita de um plantio ativo. Atualiza o status do plantio
+        para 'harvested'. Valida que o plantio não foi colhido antes.
+      parameters:
+      - description: Dados da colheita
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateHarvestRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.HarvestResponse'
+        "404":
+          description: Plantio não encontrado
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "422":
+          description: Plantio já colhido ou inativo
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Registrar colheita
+      tags:
+      - harvests
+  /api/v1/harvests/{id}:
+    get:
+      parameters:
+      - description: ID da colheita
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.HarvestResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar colheita por ID
+      tags:
+      - harvests
+  /api/v1/inputs:
+    get:
+      description: Retorna insumos paginados com filtro por categoria
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Busca por nome
+        in: query
+        name: search
+        type: string
+      - description: Filtro por categoria (fertilizer, herbicide, fungicide...)
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar insumos
+      tags:
+      - inputs
+    post:
+      consumes:
+      - application/json
+      description: Cadastra um novo insumo agrícola com controle de estoque
+      parameters:
+      - description: Dados do insumo
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateInputRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.InputResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar insumo
+      tags:
+      - inputs
+  /api/v1/inputs/{id}:
+    delete:
+      parameters:
+      - description: ID do insumo
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir insumo
+      tags:
+      - inputs
+    get:
+      parameters:
+      - description: ID do insumo
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.InputResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar insumo por ID
+      tags:
+      - inputs
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID do insumo
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateInputRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.InputResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar insumo
+      tags:
+      - inputs
+  /api/v1/inputs/{id}/stock:
+    patch:
+      consumes:
+      - application/json
+      description: Ajusta o estoque do insumo. Positivo = entrada, negativo = saída
+        manual.
+      parameters:
+      - description: ID do insumo
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Quantidade a ajustar
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdjustStockRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.InputResponse'
+        "422":
+          description: Estoque insuficiente
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ajustar estoque
+      tags:
+      - inputs
+  /api/v1/me:
+    get:
+      description: Retorna os dados do usuário autenticado
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+      security:
+      - BearerAuth: []
+      summary: Meu perfil
+      tags:
+      - users
+  /api/v1/monitorings:
+    get:
+      description: Admin vê todos, outros veem apenas os seus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.MonitoringResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar monitoramentos
+      tags:
+      - monitorings
+    post:
+      consumes:
+      - application/json
+      description: Registra um monitoramento de pragas, doenças ou condições do talhão.
+        Cria alerta automático se urgente ou severidade crítica.
+      parameters:
+      - description: Dados do monitoramento
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateMonitoringRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.MonitoringResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Registrar monitoramento
+      tags:
+      - monitorings
+  /api/v1/monitorings/{id}:
+    get:
+      parameters:
+      - description: ID do monitoramento
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MonitoringResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar monitoramento por ID
+      tags:
+      - monitorings
+  /api/v1/plantings:
+    get:
+      description: Admin vê todos os plantios, outros veem apenas os seus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.PlantingResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar plantios
+      tags:
+      - plantings
+    post:
+      consumes:
+      - application/json
+      description: Registra um novo plantio em um talhão ativo. Valida se o talhão
+        está ativo e se o usuário tem acesso.
+      parameters:
+      - description: Dados do plantio
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePlantingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.PlantingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "422":
+          description: Talhão inativo
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar plantio
+      tags:
+      - plantings
+  /api/v1/plantings/{id}:
+    delete:
+      parameters:
+      - description: ID do plantio
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir plantio
+      tags:
+      - plantings
+    get:
+      parameters:
+      - description: ID do plantio
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PlantingResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar plantio por ID
+      tags:
+      - plantings
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID do plantio
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePlantingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PlantingResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar plantio
+      tags:
+      - plantings
+  /api/v1/reports/cost-per-field:
+    get:
+      description: Retorna o custo total de insumos aplicados por talhão, filtrado
+        por fazenda e safra
+      parameters:
+      - description: Filtrar por talhão
+        in: query
+        name: field_id
+        type: integer
+      - description: Filtrar por fazenda
+        in: query
+        name: farm_id
+        type: integer
+      - description: Filtrar por safra
+        in: query
+        name: season_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Relatório de custo por talhão
+      tags:
+      - reports
+  /api/v1/reports/productivity:
+    get:
+      description: Retorna produtividade por talhão em sacas/ha e kg/ha, filtrado
+        por safra, fazenda e cultura
+      parameters:
+      - description: Filtrar por safra
+        in: query
+        name: season_id
+        type: integer
+      - description: Filtrar por fazenda
+        in: query
+        name: farm_id
+        type: integer
+      - description: Filtrar por cultura
+        in: query
+        name: crop_id
+        type: integer
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página (máx 50)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Relatório de produtividade
+      tags:
+      - reports
+  /api/v1/seasons:
+    get:
+      parameters:
+      - description: Página
+        in: query
+        name: page
+        type: integer
+      - description: Itens por página
+        in: query
+        name: limit
+        type: integer
+      - description: Busca por nome
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PaginatedResponse'
+      security:
+      - BearerAuth: []
+      summary: Listar safras
+      tags:
+      - seasons
+    post:
+      consumes:
+      - application/json
+      description: Cadastra uma nova safra com período de início e fim. Valida que
+        data_fim > data_inicio.
+      parameters:
+      - description: Dados da safra
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSeasonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SeasonResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "422":
+          description: Data fim anterior à data início
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar safra
+      tags:
+      - seasons
+  /api/v1/seasons/{id}:
+    delete:
+      parameters:
+      - description: ID da safra
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Excluir safra
+      tags:
+      - seasons
+    get:
+      parameters:
+      - description: ID da safra
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SeasonResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar safra por ID
+      tags:
+      - seasons
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID da safra
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados atualizados
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSeasonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SeasonResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Atualizar safra
+      tags:
+      - seasons
+  /api/v1/users:
+    get:
+      description: Retorna todos os usuários do sistema. Apenas admin.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.UserResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Listar usuários
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: 'Cria um novo usuário. Apenas admin pode criar usuários. Roles
+        disponíveis: admin, manager, operator.'
+      parameters:
+      - description: Dados do usuário
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Email já cadastrado
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Criar usuário
+      tags:
+      - users
+  /api/v1/users/{id}:
+    get:
+      description: Retorna os dados de um usuário específico. Apenas admin.
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buscar usuário por ID
+      tags:
+      - users
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Autentica o usuário e retorna um token JWT válido por 24h
+      parameters:
+      - description: Credenciais de login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+        "400":
+          description: Dados inválidos
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Email ou senha incorretos
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Login do usuário
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
