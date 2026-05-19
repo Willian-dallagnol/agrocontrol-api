@@ -163,6 +163,42 @@ func TestCreateUser_ValidEmail(t *testing.T) {
 	}
 }
 
+func TestCreateUser_WeakPassword(t *testing.T) {
+	svc := NewUserService(&mockUserRepo{})
+
+	weakPasswords := []string{"", "1234567", "abc", " "}
+
+	for _, pwd := range weakPasswords {
+		_, err := svc.CreateUser(dto.CreateUserRequest{
+			Name:     "Teste",
+			Email:    "teste@teste.com",
+			Password: pwd,
+			Role:     "operator",
+		})
+		if err == nil {
+			t.Errorf("esperava erro para senha fraca '%s'", pwd)
+		}
+		if !errors.Is(err, apperrors.ErrInvalidInput) {
+			t.Errorf("esperava ErrInvalidInput para senha '%s', got %v", pwd, err)
+		}
+	}
+}
+
+func TestCreateUser_StrongPassword(t *testing.T) {
+	svc := NewUserService(&mockUserRepo{})
+
+	_, err := svc.CreateUser(dto.CreateUserRequest{
+		Name:     "Willian",
+		Email:    "willian@teste.com",
+		Password: "senha123",
+		Role:     "operator",
+	})
+
+	if err != nil {
+		t.Fatalf("esperava nil para senha válida, got %v", err)
+	}
+}
+
 func TestCreateUser_AllRoles(t *testing.T) {
 	roles := []string{"admin", "manager", "operator"}
 	for _, role := range roles {
