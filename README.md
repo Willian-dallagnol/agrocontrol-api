@@ -1,8 +1,8 @@
 # 🌾 AgroControl API
 
 [![CI](https://github.com/Willian-dallagnol/agrocontrol-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Willian-dallagnol/agrocontrol-api/actions)
-[![Coverage](https://img.shields.io/badge/coverage-40.8%25-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
-[![Tests](https://img.shields.io/badge/tests-83%20passing-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
+[![Coverage](https://img.shields.io/badge/coverage-41.7%25-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
+[![Tests](https://img.shields.io/badge/tests-109%20passing-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
 [![Go](https://img.shields.io/badge/Go-1.25-blue?logo=go)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -66,7 +66,7 @@ O dashboard agrega dados de múltiplas tabelas em queries complexas. O cache de 
 
 ## Testes
 
-O projeto possui **83 testes unitários** cobrindo todos os services com **40.8% de cobertura** real do código de produção.
+O projeto possui **109 testes** cobrindo services e entidades de domínio, com **41.7% de cobertura** nos services e **78% nas entidades**.
 
 ```bash
 # Rodar todos os testes com race detector e cobertura
