@@ -28,6 +28,10 @@ func (s *UserService) CreateUser(req dto.CreateUserRequest) (*dto.UserResponse, 
 		return nil, fmt.Errorf("role inválida '%s': use admin, manager ou operator: %w",
 			req.Role, apperrors.ErrInvalidInput)
 	}
+	if !isValidEmail(strings.TrimSpace(req.Email)) {
+		return nil, fmt.Errorf("email inválido: %w", apperrors.ErrInvalidInput)
+	}
+
 	existing, err := s.Repo.FindByEmail(req.Email)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		slog.Error("user: erro ao verificar email", "email", req.Email, "error", err)
@@ -84,4 +88,19 @@ func toUserResponse(u *entities.User) *dto.UserResponse {
 		ID: u.ID, Name: u.Name, Email: u.Email,
 		Role: string(u.Role), Active: u.Active, CreatedAt: u.CreatedAt,
 	}
+}
+
+func isValidEmail(email string) bool {
+	if len(email) < 3 || len(email) > 254 {
+		return false
+	}
+	at := strings.LastIndex(email, "@")
+	if at < 1 {
+		return false
+	}
+	domain := email[at+1:]
+	if len(domain) < 3 || !strings.Contains(domain, ".") {
+		return false
+	}
+	return true
 }

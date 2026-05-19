@@ -121,6 +121,47 @@ func TestGetUsers_Success(t *testing.T) {
 		t.Fatal("esperava slice vazio, não nil")
 	}
 }
+func TestCreateUser_InvalidEmail(t *testing.T) {
+	svc := NewUserService(&mockUserRepo{})
+
+	invalidEmails := []string{
+		"nao-e-email",
+		"@semlocal.com",
+		"semdominio@",
+		"s@s",
+		"",
+	}
+
+	for _, email := range invalidEmails {
+		_, err := svc.CreateUser(dto.CreateUserRequest{
+			Name:     "Teste",
+			Email:    email,
+			Password: "senha123",
+			Role:     "operator",
+		})
+		if err == nil {
+			t.Errorf("esperava erro para email inválido '%s'", email)
+		}
+		if !errors.Is(err, apperrors.ErrInvalidInput) {
+			t.Errorf("esperava ErrInvalidInput para '%s', got %v", email, err)
+		}
+	}
+}
+
+func TestCreateUser_ValidEmail(t *testing.T) {
+	svc := NewUserService(&mockUserRepo{})
+
+	_, err := svc.CreateUser(dto.CreateUserRequest{
+		Name:     "Willian",
+		Email:    "willian@fazenda.com.br",
+		Password: "senha123",
+		Role:     "manager",
+	})
+
+	if err != nil {
+		t.Fatalf("esperava nil para email válido, got %v", err)
+	}
+}
 
 func TestCreateUser_AllRoles(t *testing.T) {
 	roles := []string{"admin", "manager", "operator"}
@@ -136,4 +177,5 @@ func TestCreateUser_AllRoles(t *testing.T) {
 			t.Errorf("role '%s' deveria ser válida, got %v", role, err)
 		}
 	}
+
 }
