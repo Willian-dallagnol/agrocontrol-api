@@ -336,7 +336,7 @@ func TestUserService_Mock_Create_InvalidRole(t *testing.T) {
 	svc := service.NewUserService(repo)
 
 	_, err := svc.CreateUser(dto.CreateUserRequest{
-		Name: "X", Email: "x@x.com", Password: "123456", Role: "superadmin",
+		Name: "X", Email: "x@x.com", Password: "senha123456", Role: "superadmin",
 	})
 	if !apperrors.IsInvalidInput(err) {
 		t.Errorf("esperava ErrInvalidInput para role inválida, got: %v", err)
@@ -352,7 +352,7 @@ func TestUserService_Mock_Create_DuplicateEmail(t *testing.T) {
 	svc := service.NewUserService(repo)
 
 	_, err := svc.CreateUser(dto.CreateUserRequest{
-		Name: "João", Email: "jo@jo.com", Password: "123456", Role: "operator",
+		Name: "João", Email: "jo@jo.com", Password: "senha123456", Role: "operator",
 	})
 	if !apperrors.IsConflict(err) {
 		t.Errorf("esperava ErrConflict para email duplicado, got: %v", err)

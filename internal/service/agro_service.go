@@ -90,14 +90,14 @@ func (s *InputService) UpdateInput(id uint, req dto.UpdateInputRequest, userID u
 	if role != "admin" && input.CreatedBy != userID {
 		return nil, apperrors.ForbiddenError("editar este insumo")
 	}
-	input.Name           = strings.TrimSpace(req.Name)
-	input.Manufacturer   = strings.TrimSpace(req.Manufacturer)
-	input.BatchNumber    = req.BatchNumber
+	input.Name = strings.TrimSpace(req.Name)
+	input.Manufacturer = strings.TrimSpace(req.Manufacturer)
+	input.BatchNumber = req.BatchNumber
 	input.ExpirationDate = req.ExpirationDate
-	input.Unit           = strings.TrimSpace(req.Unit)
-	input.MinStockQty    = req.MinStockQty
-	input.CostPerUnit    = req.CostPerUnit
-	input.Active         = req.Active
+	input.Unit = strings.TrimSpace(req.Unit)
+	input.MinStockQty = req.MinStockQty
+	input.CostPerUnit = req.CostPerUnit
+	input.Active = req.Active
 
 	if err := s.Repo.Update(input); err != nil {
 		return nil, fmt.Errorf("erro ao atualizar insumo: %w", err)
@@ -303,8 +303,12 @@ func toApplicationResponse(a *entities.Application) *dto.ApplicationResponse {
 		WindSpeed: a.WindSpeed, Temperature: a.Temperature, Humidity: a.Humidity,
 		Notes: a.Notes, CreatedBy: a.CreatedBy, CreatedAt: a.CreatedAt,
 	}
-	if a.Field.ID > 0 { r.FieldName = a.Field.Name }
-	if a.Input.ID > 0 { r.InputName = a.Input.Name }
+	if a.Field.ID > 0 {
+		r.FieldName = a.Field.Name
+	}
+	if a.Input.ID > 0 {
+		r.InputName = a.Input.Name
+	}
 	return r
 }
 
@@ -422,7 +426,9 @@ func toMonitoringResponse(m *entities.Monitoring) *dto.MonitoringResponse {
 		Urgent: m.Urgent, Inspector: m.Inspector, Notes: m.Notes,
 		CreatedBy: m.CreatedBy, CreatedAt: m.CreatedAt, UpdatedAt: m.UpdatedAt,
 	}
-	if m.Field.ID > 0 { r.FieldName = m.Field.Name }
+	if m.Field.ID > 0 {
+		r.FieldName = m.Field.Name
+	}
 	return r
 }
 
@@ -465,11 +471,20 @@ func (s *HarvestService) CreateHarvest(req dto.CreateHarvestRequest, userID uint
 
 	err = s.TxRunner.RunInTx(func(tx ports.TxRunner) error {
 		harvest = entities.Harvest{
-			PlantingID: req.PlantingID, FieldID: planting.FieldID, HarvestDate: req.HarvestDate,
-			ProductivityBagHa: req.ProductivityBagHa, ProductivityKgHa: req.ProductivityKgHa,
-			TotalBags: req.TotalBags, GrainMoisture: req.GrainMoisture,
-			Impurity: req.Impurity, FieldLoss: req.FieldLoss,
-			Notes: req.Notes, CreatedBy: userID,
+			PlantingID:    req.PlantingID,
+			FieldID:       planting.FieldID,
+			HarvestDate:   req.HarvestDate,
+			TotalBags:     req.TotalBags,
+			GrainMoisture: req.GrainMoisture,
+			Impurity:      req.Impurity,
+			FieldLoss:     req.FieldLoss,
+			Notes:         req.Notes,
+			CreatedBy:     userID,
+		}
+		// Calcula produtividade usando regra da entidade + área real do talhão
+		field, err := s.FieldRepo.FindByID(planting.FieldID)
+		if err == nil && field.Area > 0 {
+			harvest.CalculateProductivity(field.Area)
 		}
 		if err := s.Repo.CreateTx(tx, &harvest); err != nil {
 			return err
@@ -482,7 +497,7 @@ func (s *HarvestService) CreateHarvest(req dto.CreateHarvestRequest, userID uint
 	}
 
 	slog.Info("harvest: registrada", "harvest_id", harvest.ID, "planting_id", req.PlantingID,
-		"productivity_bag_ha", req.ProductivityBagHa)
+		"productivity_bag_ha", harvest.ProductivityBagHa)
 
 	full, _ := s.Repo.FindByID(harvest.ID)
 	return toHarvestResponse(full), nil
@@ -530,7 +545,9 @@ func toHarvestResponse(h *entities.Harvest) *dto.HarvestResponse {
 		FieldLoss: h.FieldLoss, Notes: h.Notes, CreatedBy: h.CreatedBy,
 		CreatedAt: h.CreatedAt, UpdatedAt: h.UpdatedAt,
 	}
-	if h.Field.ID > 0 { r.FieldName = h.Field.Name }
+	if h.Field.ID > 0 {
+		r.FieldName = h.Field.Name
+	}
 	return r
 }
 
