@@ -489,7 +489,7 @@ func (s *HarvestService) CreateHarvest(req dto.CreateHarvestRequest, userID uint
 		if err := s.Repo.CreateTx(tx, &harvest); err != nil {
 			return err
 		}
-		planting.Status = entities.PlantingStatusHarvested
+		planting.MarkHarvested()
 		return s.PlantingRepo.Update(planting)
 	})
 	if err != nil {
