@@ -34,6 +34,9 @@ func (s *UserService) CreateUser(req dto.CreateUserRequest) (*dto.UserResponse, 
 	if len(strings.TrimSpace(req.Password)) < 8 {
 		return nil, fmt.Errorf("senha deve ter no mínimo 8 caracteres: %w", apperrors.ErrInvalidInput)
 	}
+	if strings.TrimSpace(req.Name) == "" {
+		return nil, fmt.Errorf("nome é obrigatório: %w", apperrors.ErrInvalidInput)
+	}
 
 	existing, err := s.Repo.FindByEmail(req.Email)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {

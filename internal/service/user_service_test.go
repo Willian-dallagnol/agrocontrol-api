@@ -199,6 +199,24 @@ func TestCreateUser_StrongPassword(t *testing.T) {
 	}
 }
 
+func TestCreateUser_EmptyName(t *testing.T) {
+	svc := NewUserService(&mockUserRepo{})
+
+	_, err := svc.CreateUser(dto.CreateUserRequest{
+		Name:     "   ",
+		Email:    "teste@teste.com",
+		Password: "senha123",
+		Role:     "operator",
+	})
+
+	if err == nil {
+		t.Fatal("esperava erro para nome vazio")
+	}
+	if !errors.Is(err, apperrors.ErrInvalidInput) {
+		t.Errorf("esperava ErrInvalidInput, got %v", err)
+	}
+}
+
 func TestCreateUser_AllRoles(t *testing.T) {
 	roles := []string{"admin", "manager", "operator"}
 	for _, role := range roles {
