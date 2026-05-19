@@ -53,36 +53,36 @@ func main() {
 	}
 
 	// ── Repositórios concretos ────────────────────────────────────────────
-	userRepo        := repository.NewUserRepository(db)
-	farmRepo        := repository.NewFarmRepository(db)
-	fieldRepo       := repository.NewFieldRepository(db)
-	cropRepo        := repository.NewCropRepository(db)
-	seasonRepo      := repository.NewSeasonRepository(db)
-	plantingRepo    := repository.NewPlantingRepository(db)
-	inputRepo       := repository.NewInputRepository(db)
+	userRepo := repository.NewUserRepository(db)
+	farmRepo := repository.NewFarmRepository(db)
+	fieldRepo := repository.NewFieldRepository(db)
+	cropRepo := repository.NewCropRepository(db)
+	seasonRepo := repository.NewSeasonRepository(db)
+	plantingRepo := repository.NewPlantingRepository(db)
+	inputRepo := repository.NewInputRepository(db)
 	applicationRepo := repository.NewApplicationRepository(db)
-	monitoringRepo  := repository.NewMonitoringRepository(db)
-	harvestRepo     := repository.NewHarvestRepository(db)
-	alertRepo       := repository.NewAlertRepository(db)
-	reportRepo      := repository.NewReportRepository(db)
+	monitoringRepo := repository.NewMonitoringRepository(db)
+	harvestRepo := repository.NewHarvestRepository(db)
+	alertRepo := repository.NewAlertRepository(db)
+	reportRepo := repository.NewReportRepository(db)
 
 	// ── TxRunner — único ponto de acoplamento ao GORM nos serviços ───────
 	txRunner := repository.NewGormTxRunner(db)
 
 	// ── Serviços com interfaces (ports) ───────────────────────────────────
-	authService        := service.NewAuthService(userRepo, cfg.JWTSecret, cfg.JWTExpHours)
-	userService        := service.NewUserService(userRepo)
-	farmService        := service.NewFarmService(farmRepo)
-	fieldService       := service.NewFieldService(fieldRepo, farmRepo)
-	cropService        := service.NewCropService(cropRepo)
-	seasonService      := service.NewSeasonService(seasonRepo)
-	plantingService    := service.NewPlantingService(plantingRepo, fieldRepo, seasonRepo, cropRepo)
-	inputService       := service.NewInputService(inputRepo, alertRepo, txRunner)
+	authService := service.NewAuthService(userRepo, cfg.JWTSecret, cfg.JWTExpHours)
+	userService := service.NewUserService(userRepo)
+	farmService := service.NewFarmService(farmRepo)
+	fieldService := service.NewFieldService(fieldRepo, farmRepo)
+	cropService := service.NewCropService(cropRepo)
+	seasonService := service.NewSeasonService(seasonRepo)
+	plantingService := service.NewPlantingService(plantingRepo, fieldRepo, seasonRepo, cropRepo)
+	inputService := service.NewInputService(inputRepo, alertRepo, txRunner)
 	applicationService := service.NewApplicationService(applicationRepo, fieldRepo, inputRepo, alertRepo, txRunner)
-	monitoringService  := service.NewMonitoringService(monitoringRepo, fieldRepo, alertRepo)
-	harvestService     := service.NewHarvestService(harvestRepo, plantingRepo, fieldRepo, txRunner)
-	alertService       := service.NewAlertService(alertRepo)
-	reportService      := service.NewReportService(reportRepo, redisClient)
+	monitoringService := service.NewMonitoringService(monitoringRepo, fieldRepo, alertRepo)
+	harvestService := service.NewHarvestService(harvestRepo, plantingRepo, fieldRepo, txRunner)
+	alertService := service.NewAlertService(alertRepo)
+	reportService := service.NewReportService(reportRepo, redisClient)
 
 	h := routes.Handlers{
 		Auth:        handler.NewAuthHandler(authService),
@@ -105,8 +105,9 @@ func main() {
 	}
 
 	r := gin.New()
-	r.Use(middleware.RequestID())    // UUID por request — rastreabilidade
-	r.Use(middleware.Logger())       // log estruturado com request_id
+	r.Use(middleware.RequestID())       // UUID por request — rastreabilidade
+	r.Use(middleware.Logger())          // log estruturado com request_id
+	r.Use(middleware.SecurityHeaders()) // security headers em todas as respostas
 	r.Use(gin.Recovery())
 	r.Use(middleware.NewRateLimiter(10, 30).Middleware())
 
