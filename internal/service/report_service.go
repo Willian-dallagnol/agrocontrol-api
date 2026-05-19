@@ -56,6 +56,7 @@ func (s *ReportService) GetProductivityReport(q dto.ProductivityReportQuery, use
 			FieldLossPct:      r.FieldLoss,
 			EstimatedTotalKg:  round2(r.ProductivityKgHa * r.AreaHa),
 			AboveAverageArea:  r.ProductivityBagHa > avgBagHa,
+			IsLate:            r.HarvestDate.IsZero() && !r.PlantingDate.IsZero() && time.Now().After(r.PlantingDate.AddDate(0, 6, 0)),
 		})
 	}
 	totalPages := int(math.Ceil(float64(total) / float64(q.Limit)))
@@ -102,13 +103,20 @@ func (s *ReportService) GetCostPerFieldReport(q dto.CostPerFieldQuery, userID ui
 		cost := r.TotalCost
 		acc.item.TotalApplications += int(r.AppCount)
 		switch r.Category {
-		case "fertilizer":   acc.item.CostFertilizer += cost
-		case "herbicide":    acc.item.CostHerbicide += cost
-		case "fungicide":    acc.item.CostFungicide += cost
-		case "insecticide":  acc.item.CostInsecticide += cost
-		case "correctant":   acc.item.CostCorrectant += cost
-		case "biological":   acc.item.CostBiological += cost
-		default:             acc.item.CostOther += cost
+		case "fertilizer":
+			acc.item.CostFertilizer += cost
+		case "herbicide":
+			acc.item.CostHerbicide += cost
+		case "fungicide":
+			acc.item.CostFungicide += cost
+		case "insecticide":
+			acc.item.CostInsecticide += cost
+		case "correctant":
+			acc.item.CostCorrectant += cost
+		case "biological":
+			acc.item.CostBiological += cost
+		default:
+			acc.item.CostOther += cost
 		}
 		acc.item.TotalCost += cost
 	}
@@ -125,22 +133,32 @@ func (s *ReportService) GetCostPerFieldReport(q dto.CostPerFieldQuery, userID ui
 		acc := fieldMap[id]
 		item := &acc.item
 		item.TotalCost = round2(item.TotalCost)
-		if item.AreaHa > 0 { item.CostPerHa = round2(item.TotalCost / item.AreaHa) }
-		if bags, ok := bagsMap[id]; ok && bags > 0 { item.TotalBags = bags; item.CostPerBag = round2(item.TotalCost / bags) }
+		if item.AreaHa > 0 {
+			item.CostPerHa = round2(item.TotalCost / item.AreaHa)
+		}
+		if bags, ok := bagsMap[id]; ok && bags > 0 {
+			item.TotalBags = bags
+			item.CostPerBag = round2(item.TotalCost / bags)
+		}
 		item.CostFertilizer = round2(item.CostFertilizer)
-		item.CostHerbicide  = round2(item.CostHerbicide)
-		item.CostFungicide  = round2(item.CostFungicide)
+		item.CostHerbicide = round2(item.CostHerbicide)
+		item.CostFungicide = round2(item.CostFungicide)
 		item.CostInsecticide = round2(item.CostInsecticide)
 		item.CostCorrectant = round2(item.CostCorrectant)
 		item.CostBiological = round2(item.CostBiological)
-		item.CostOther      = round2(item.CostOther)
+		item.CostOther = round2(item.CostOther)
 		totalCost += item.TotalCost
 		totalArea += item.AreaHa
-		if item.CostPerHa > mostExpensiveCostHa { mostExpensiveCostHa = item.CostPerHa; mostExpensiveField = item.FieldName }
+		if item.CostPerHa > mostExpensiveCostHa {
+			mostExpensiveCostHa = item.CostPerHa
+			mostExpensiveField = item.FieldName
+		}
 		items = append(items, *item)
 	}
 	avgCostHa := 0.0
-	if totalArea > 0 { avgCostHa = round2(totalCost / totalArea) }
+	if totalArea > 0 {
+		avgCostHa = round2(totalCost / totalArea)
+	}
 	return &dto.CostPerFieldResponse{
 		Items: items,
 		Summary: dto.CostSummary{
