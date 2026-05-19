@@ -1,7 +1,8 @@
 # 🌾 AgroControl API
 
 [![CI](https://github.com/Willian-dallagnol/agrocontrol-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Willian-dallagnol/agrocontrol-api/actions)
-[![Coverage](https://img.shields.io/badge/coverage-41.7%25-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
+[![Coverage](https://img.shields.io/badge/coverage-42.1%25-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
+[![Codecov](https://codecov.io/gh/Willian-dallagnol/agrocontrol-api/branch/main/graph/badge.svg)](https://codecov.io/gh/Willian-dallagnol/agrocontrol-api)
 [![Tests](https://img.shields.io/badge/tests-109%20passing-brightgreen)](https://github.com/Willian-dallagnol/agrocontrol-api)
 [![Go](https://img.shields.io/badge/Go-1.25-blue?logo=go)](https://go.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -66,7 +67,7 @@ O dashboard agrega dados de múltiplas tabelas em queries complexas. O cache de 
 
 ## Testes
 
-O projeto possui **109 testes** cobrindo services e entidades de domínio, com **41.7% de cobertura** nos services e **78% nas entidades**.
+O projeto possui **112 testes** cobrindo services e entidades de domínio, com **42.1% de cobertura** nos services e **78% nas entidades**.
 
 ```bash
 # Rodar todos os testes com race detector e cobertura
@@ -91,6 +92,13 @@ Serviços cobertos com testes:
 - MonitoringService — alertas automáticos para casos críticos
 - AuthService — bcrypt e JWT reais
 - UserService — validação de roles, email lowercase
+
+**Entidades de domínio com regras de negócio testadas:**
+- Harvest — CalculateProductivity, IsHighYield, AdjustedTotalBags
+- Field — IsActive, IsAvailableForPlanting, Deactivate, SetFallow
+- Season — IsOngoing, DurationDays, Activate, Finish
+- Planting — IsLate, DaysUntilHarvest, MarkHarvested, TotalSeedsForArea
+- Input — IsLowStock, IsExpired, IsExpiringSoon
 
 ---
 
